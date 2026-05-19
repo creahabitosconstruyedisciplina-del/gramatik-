@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mein Deutsch — Mi Vocabulario</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --surface: #ede7d9;
+  --card: #fff9f0;
+  --accent: #2d5016;
+  --accent2: #8b4513;
+  --gold: #c8960c;
+  --text: #1a1612;
+  --muted: #8a7d6b;
+  --border: #d4c9b5;
+  --danger: #8b2020;
+  --success: #2d5016;
+  --tag-bg: #e8e0d0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Ccircle fill='%23c8960c' fill-opacity='0.04' cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* NAV */
+.nav {
+  background: var(--accent);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  color: #f5f0e8;
+  letter-spacing: 0.02em;
+}
+
+.nav-logo span {
+  color: var(--gold);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  color: rgba(245,240,232,0.6);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.nav-tab.active, .nav-tab:hover {
+  background: rgba(245,240,232,0.12);
+  color: #f5f0e8;
+}
+.nav-tab.active { color: var(--gold); }
+
+/* VIEWS */
+.view { display: none; padding: 24px 20px; max-width: 740px; margin: 0 auto; }
+.view.active { display: block; }
+
+/* ===== STUDY VIEW ===== */
+.study-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.study-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+.cat-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+.cat-scroll::-webkit-scrollbar { display: none; }
+
+.cat-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+.cat-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #f5f0e8;
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-chip .num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-chip .lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* CARD */
+.card-wrap {
+  perspective: 1200px;
+  margin-bottom: 16px;
+}
+
+.card-inner {
+  width: 100%;
+  min-height: 220px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  position: relative;
+}
+.card-inner.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+  text-align: center;
+  min-height: 220px;
+}
+
+.card-front {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+}
+.card-back {
+  background: var(--accent);
+  border: 1.5px solid var(--accent);
+  transform: rotateY(180deg);
+  box-shadow: 0 4px 20px rgba(45,80,22,0.25);
+}
+
+.card-category {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  background: var(--tag-bg);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.card-back .card-category {
+  color: rgba(245,240,232,0.5);
+  background: rgba(255,255,255,0.1);
+}
+
+.card-word {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.card-back .card-word { color: #f5f0e8; }
+
+.card-sub {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.card-back .card-sub { color: rgba(245,240,232,0.55); }
+
+.tap-label {
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--border);
+}
+
+.study-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.s-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 11px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: all 0.15s;
+  background: transparent;
+}
+.s-btn-no { border-color: var(--danger); color: var(--danger); }
+.s-btn-no:hover { background: rgba(139,32,32,0.08); }
+.s-btn-skip { border-color: var(--border); color: var(--muted); }
+.s-btn-skip:hover { border-color: var(--muted); }
+.s-btn-yes { border-color: var(--success); color: var(--success); }
+.s-btn-yes:hover { background: rgba(45,80,22,0.08); }
+
+.s-btn-row {
+  display: flex;
+  gap: 8px;
+}
+
+.s-btn-half {
+  flex: 1;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: transparent;
+  transition: all 0.15s;
+}
+.s-btn-half:hover { border-color: var(--accent); color: var(--accent); }
+
+.done-box {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 40px 20px;
+  text-align: center;
+  display: none;
+}
+.done-box.show { display: block; }
+.done-box h2 { font-family:'Fraunces',serif; font-size:1.8rem; color:var(--accent); margin-bottom:12px; }
+.done-box p { font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--muted); line-height:2; }
+.done-btns { display:flex; gap:8px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+.done-btn {
+  font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.08em;
+  text-transform:uppercase; padding:10px 20px; border-radius:4px; cursor:pointer;
+  border:1.5px solid var(--accent); color:var(--accent); background:transparent;
+  transition:all 0.15s;
+}
+.done-btn:hover { background:var(--accent); color:#f5f0e8; }
+
+/* ===== MANAGE VIEW ===== */
+.manage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.manage-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+.btn-add {
+  background: var(--accent);
+  color: #f5f0e8;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-add:hover { opacity: 0.85; }
+
+/* ADD FORM */
+.add-form {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: none;
+  animation: slideDown 0.2s ease;
+}
+.add-form.show { display: block; }
+
+@keyframes slideDown {
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media(max-width:480px){ .form-row { grid-template-columns:1fr; } }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.form-field input, .form-field select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-field input:focus, .form-field select:focus {
+  border-color: var(--accent);
+}
+.form-field input::placeholder { color: var(--border); }
+
+.form-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.form-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s;
+  background: transparent;
+}
+.form-btn-cancel { border-color:var(--border); color:var(--muted); }
+.form-btn-cancel:hover { border-color:var(--muted); }
+.form-btn-save { border-color:var(--accent); color:var(--accent); }
+.form-btn-save:hover { background:var(--accent); color:#f5f0e8; }
+
+/* NEW CATEGORY ROW */
+.new-cat-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: flex-end;
+}
+.new-cat-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  outline: none;
+}
+.new-cat-row input:focus { border-color:var(--accent); }
+.btn-cat {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.btn-cat:hover { border-color:var(--gold); color:var(--gold); }
+
+/* SEARCH */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.search-bar input {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 9px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text);
+  outline: none;
+}
+.search-bar input:focus { border-color:var(--accent); }
+
+/* CARDS LIST */
+.cat-section { margin-bottom: 24px; }
+.cat-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.cat-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--accent2);
+}
+.cat-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  gap: 10px;
+  transition: border-color 0.15s;
+}
+.card-row:hover { border-color: var(--muted); }
+
+.card-row-de {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--text);
+  flex: 1;
+}
+.card-row-arrow {
+  color: var(--border);
+  font-size: 0.8rem;
+}
+.card-row-es {
+  font-size: 0.88rem;
+  color: var(--muted);
+  flex: 1;
+}
+
+.card-row-actions {
+  display: flex;
+  gap: 4px;
+}
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  color: var(--border);
+  transition: all 0.15s;
+  line-height: 1;
+}
+.icon-btn:hover { background: var(--surface); color: var(--text); }
+.icon-btn.del:hover { color: var(--danger); }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+/* IMPORT from old file note */
+.import-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 3px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,22,18,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideDown 0.2s ease;
+}
+.modal h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; } to { opacity:1; }
+}
+
+/* ===== GRAMMAR VIEW ===== */
+.grammar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.grammar-subtitle {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+  font-family: 'DM Mono', monospace;
+}
+
+.grammar-topics {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+  scrollbar-width: none;
+}
+.grammar-topics::-webkit-scrollbar { display: none; }
+
+.topic-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+.topic-pill.active {
+  background: var(--accent2);
+  border-color: var(--accent2);
+  color: #f5f0e8;
+}
+
+.grammar-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  margin-bottom: 16px;
+  display: none;
+  animation: slideDown 0.25s ease;
+}
+.grammar-card.active { display: block; }
+
+.grammar-card h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.grammar-card .tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+.grammar-card p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.grammar-card p strong {
+  color: var(--accent2);
+}
+
+.g-rule {
+  background: var(--surface);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.g-rule .g-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.g-rule .g-example {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--accent);
+}
+.g-rule .g-trans {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.g-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 0.85rem;
+}
+.g-table th {
+  background: var(--accent);
+  color: #f5f0e8;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+}
+.g-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.g-table tr:nth-child(even) td { background: var(--surface); }
+.g-table .de { font-family: 'Fraunces', serif; color: var(--accent2); font-size: 0.95rem; }
+.g-table .es { color: var(--muted); font-size: 0.82rem; font-style: italic; }
+.g-table .hl { color: var(--accent); font-weight: 600; }
+
+.g-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0 4px 4px 0;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+.g-note strong { color: var(--accent2); }
+
+.grammar-add-btn {
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.18s;
+  margin-top: 8px;
+}
+.grammar-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">Mein <span>Deutsch</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('study')">Estudiar</button>
+    <button class="nav-tab" onclick="showView('manage')">Tarjetas</button>
+    <button class="nav-tab" onclick="showView('grammar')">Gramática</button>
+  </div>
+</nav>
+
+<!-- ===== STUDY VIEW ===== -->
+<div class="view active" id="view-study">
+  <div class="study-header">
+    <div class="study-title">Estudiar</div>
+    <button class="s-btn-half" style="flex:0;padding:7px 14px;" onclick="toggleDir()" id="dirBtn">DE → ES</button>
+  </div>
+
+  <div class="cat-scroll" id="studyCats"></div>
+
+  <div class="stats-row">
+    <div class="stat-chip"><div class="num" id="sCorrect">0</div><div class="lbl">Correctas</div></div>
+    <div class="stat-chip" style="flex:3">
+      <div class="progress-bar" style="width:100%;margin:0"><div class="progress-fill" id="sFill" style="width:0%"></div></div>
+      <div class="lbl" style="margin-top:6px" id="sProgress">0 / 0</div>
+    </div>
+    <div class="stat-chip"><div class="num" id="sRemain">0</div><div class="lbl">Quedan</div></div>
+  </div>
+
+  <div id="studyCardWrap">
+    <div class="card-wrap">
+      <div class="card-inner" id="cardInner" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-category" id="cfCat">—</div>
+          <div class="card-word" id="cfWord">—</div>
+          <div class="card-sub" id="cfSub">toca para ver la traducción</div>
+          <div class="tap-label">◉ toca para girar</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category" id="cbCat">—</div>
+          <div class="card-word" id="cbWord">—</div>
+          <div class="card-sub" id="cbSub"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-actions">
+      <button class="s-btn s-btn-no" onclick="markCard(false)">✕ No sé</button>
+      <button class="s-btn s-btn-skip" onclick="skipCard()">→ Saltar</button>
+      <button class="s-btn s-btn-yes" onclick="markCard(true)">✓ Lo sé</button>
+    </div>
+    <div class="s-btn-row">
+      <button class="s-btn-half" onclick="shuffleDeck()">⇄ Barajar</button>
+      <button class="s-btn-half" onclick="restartDeck()">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="done-box" id="doneBox">
+    <h2>¡Ronda completa!</h2>
+    <p id="doneStats"></p>
+    <div class="done-btns">
+      <button class="done-btn" onclick="restartDeck()">Repetir todo</button>
+      <button class="done-btn" onclick="restartWrong()">Solo falladas</button>
+    </div>
+  </div>
+
+  <div class="empty-state" id="studyEmpty" style="display:none">
+    No hay tarjetas en esta categoría.<br>Ve a "Tarjetas" para añadir.
+  </div>
+</div>
+
+<!-- ===== MANAGE VIEW ===== -->
+<div class="view" id="view-manage">
+  <div class="manage-header">
+    <div class="manage-title">Mis tarjetas</div>
+    <button class="btn-add" onclick="toggleAddForm()">+ Añadir</button>
+  </div>
+
+  <div class="import-note">
+    💡 Tus tarjetas se guardan automáticamente en este navegador. Puedes añadir nuevas cada día que aprendas algo.
+  </div>
+
+  <div class="add-form" id="addForm">
+    <div class="form-row">
+      <div class="form-field">
+        <label>Alemán (DE)</label>
+        <input type="text" id="fDE" placeholder="z.B. Haus (das)" />
+      </div>
+      <div class="form-field">
+        <label>Español (ES)</label>
+        <input type="text" id="fES" placeholder="ej. la casa" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Categoría</label>
+        <select id="fCat"></select>
+      </div>
+      <div class="form-field">
+        <label>Nueva categoría</label>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="fNewCat" placeholder="ej. Conectores" style="flex:1" />
+          <button class="btn-cat" onclick="addCategory()">+ OK</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-btns">
+      <button class="form-btn form-btn-cancel" onclick="cancelForm()">Cancelar</button>
+      <button class="form-btn form-btn-save" onclick="saveCard()">Guardar</button>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Buscar tarjetas..." oninput="renderManage()" />
+  </div>
+
+  <div id="manageList"></div>
+</div>
+
+<!-- ===== GRAMMAR VIEW ===== -->
+<div class="view" id="view-grammar">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <div class="grammar-title">Gramática</div>
+    <button class="btn-add" onclick="toggleGrammarForm()">+ Añadir tema</button>
+  </div>
+  <div class="grammar-subtitle">Tus notas de gramática · guardadas automáticamente</div>
+
+  <!-- FORM -->
+  <div class="add-form" id="grammarForm">
+    <div class="form-row">
+      <div class="form-field" style="grid-column:span 2">
+        <label>Título del tema</label>
+        <input type="text" id="gTitle" placeholder="ej. Verbos modales" />
+      </div>
+    </div>
+    <div class="form-field" style="margin-bottom:12px">
+      <label>Subtítulo / etiqueta (opcional)</label>
+      <input type="text" id="gTagline" placeholder="ej. können, müssen, dürfen…" />
+    </div>
+    <div class="form-field" style="margin-bottom:12px">
+      <label>Explicación y notas</label>
+      <textarea id="gBody" rows="8" placeholder="Escribe tu explicación, ejemplos, reglas… Puedes usar saltos de línea libremente." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--text);outline:none;resize:vertical;line-height:1.6"></textarea>
+    </div>
+    <div class="form-btns">
+      <button class="form-btn form-btn-cancel" onclick="cancelGrammarForm()">Cancelar</button>
+      <button class="form-btn form-btn-save" onclick="saveGrammarTopic()">Guardar</button>
+    </div>
+  </div>
+
+  <div class="grammar-topics" id="grammarTopics"></div>
+  <div id="grammarContent"></div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>Editar tarjeta</h3>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Alemán (DE)</label>
+        <input type="text" id="eDE" />
+      </div>
+      <div class="form-field">
+        <label>Español (ES)</label>
+        <input type="text" id="eES" />
+      </div>
+    </div>
+    <div class="form-field" style="margin-bottom:16px">
+      <label>Categoría</label>
+      <select id="eCat"></select>
+    </div>
+    <div class="form-btns">
+      <button class="form-btn form-btn-cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="form-btn form-btn-save" onclick="saveEdit()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========== DATA ===========
+const STORAGE_KEY = 'mein_deutsch_cards_v2';
+const CATS_KEY = 'mein_deutsch_cats_v2';
+
+const DEFAULT_CATS = ["Vocab","Verbos","Adjetivos","Adverbios","Casa","Cuerpo","Ropa","Mesa","Familia","Tiempo","Frases","Viajes","Comida"];
+
+const DEFAULT_CARDS = [
+  {id:uid(),de:"Aufräumen",es:"ordenar / recoger",cat:"Verbos"},
+  {id:uid(),de:"Ausleihen",es:"pedir prestado",cat:"Verbos"},
+  {id:uid(),de:"Bestellen",es:"pedir",cat:"Verbos"},
+  {id:uid(),de:"Einladen",es:"invitar",cat:"Verbos"},
+  {id:uid(),de:"Verstehen",es:"comprender",cat:"Verbos"},
+  {id:uid(),de:"Bezahlen",es:"pagar",cat:"Verbos"},
+  {id:uid(),de:"Abholen",es:"recoger / ir a buscar",cat:"Verbos"},
+  {id:uid(),de:"Anrufen",es:"llamar por teléfono",cat:"Verbos"},
+  {id:uid(),de:"Aufstehen",es:"levantarse",cat:"Verbos"},
+  {id:uid(),de:"Aufwachen",es:"despertarse",cat:"Verbos"},
+  {id:uid(),de:"Einschlafen",es:"dormirse",cat:"Verbos"},
+  {id:uid(),de:"Einkaufen",es:"hacer la compra",cat:"Verbos"},
+  {id:uid(),de:"Kennenlernen",es:"conocer a alguien",cat:"Verbos"},
+  {id:uid(),de:"Sich fühlen",es:"sentirse",cat:"Verbos"},
+  {id:uid(),de:"Sich duschen",es:"ducharse",cat:"Verbos"},
+  {id:uid(),de:"Genießen",es:"disfrutar",cat:"Verbos"},
+  {id:uid(),de:"Reisen",es:"viajar",cat:"Verbos"},
+  {id:uid(),de:"Buchen",es:"reservar",cat:"Verbos"},
+  {id:uid(),de:"Übernachten",es:"pasar la noche",cat:"Verbos"},
+  {id:uid(),de:"Wandern",es:"ir de excursión",cat:"Verbos"},
+  {id:uid(),de:"Fast",es:"casi",cat:"Adverbios"},
+  {id:uid(),de:"Mehr",es:"más",cat:"Adverbios"},
+  {id:uid(),de:"Weniger",es:"menos",cat:"Adverbios"},
+  {id:uid(),de:"Ziemlich",es:"bastante",cat:"Adverbios"},
+  {id:uid(),de:"Noch",es:"todavía",cat:"Adverbios"},
+  {id:uid(),de:"Selten",es:"raramente",cat:"Adverbios"},
+  {id:uid(),de:"Leider",es:"por desgracia",cat:"Adverbios"},
+  {id:uid(),de:"Hoffentlich",es:"ojalá",cat:"Adverbios"},
+  {id:uid(),de:"Langweilig",es:"aburrido",cat:"Adjetivos"},
+  {id:uid(),de:"Lecker",es:"delicioso",cat:"Adjetivos"},
+  {id:uid(),de:"Gemütlich",es:"acogedor / cómodo",cat:"Adjetivos"},
+  {id:uid(),de:"Schwer",es:"difícil / pesado",cat:"Adjetivos"},
+  {id:uid(),de:"Einfach",es:"fácil / sencillo",cat:"Adjetivos"},
+  {id:uid(),de:"Pünktlich",es:"puntual",cat:"Adjetivos"},
+  {id:uid(),de:"Schnell",es:"rápido",cat:"Adjetivos"},
+  {id:uid(),de:"Langsam",es:"lento",cat:"Adjetivos"},
+  {id:uid(),de:"Gemein",es:"malo / cruel",cat:"Adjetivos"},
+  {id:uid(),de:"Toll",es:"genial",cat:"Adjetivos"},
+  {id:uid(),de:"Wunderbar",es:"maravilloso",cat:"Adjetivos"},
+  {id:uid(),de:"Sauber",es:"limpio",cat:"Adjetivos"},
+  {id:uid(),de:"Schmutzig",es:"sucio",cat:"Adjetivos"},
+  {id:uid(),de:"Heute",es:"hoy",cat:"Tiempo"},
+  {id:uid(),de:"Gestern",es:"ayer",cat:"Tiempo"},
+  {id:uid(),de:"Übermorgen",es:"pasado mañana",cat:"Tiempo"},
+  {id:uid(),de:"Vorgestern",es:"antes de ayer",cat:"Tiempo"},
+  {id:uid(),de:"Letztes Jahr",es:"el año pasado",cat:"Tiempo"},
+  {id:uid(),de:"Diese Woche",es:"esta semana",cat:"Tiempo"},
+  {id:uid(),de:"Letzte Woche",es:"la semana pasada",cat:"Tiempo"},
+  {id:uid(),de:"Staubsaugen",es:"pasar la aspiradora",cat:"Casa"},
+  {id:uid(),de:"Den Müll rausbringen",es:"sacar la basura",cat:"Casa"},
+  {id:uid(),de:"Wäsche waschen",es:"lavar la ropa",cat:"Casa"},
+  {id:uid(),de:"Kleidung bügeln",es:"planchar la ropa",cat:"Casa"},
+  {id:uid(),de:"Den Tisch decken",es:"poner la mesa",cat:"Casa"},
+  {id:uid(),de:"Fegen",es:"barrer",cat:"Casa"},
+  {id:uid(),de:"Gießen",es:"regar",cat:"Casa"},
+  {id:uid(),de:"Arm (der)",es:"brazo",cat:"Cuerpo"},
+  {id:uid(),de:"Bauch (der)",es:"tripa / barriga",cat:"Cuerpo"},
+  {id:uid(),de:"Kopf (der)",es:"la cabeza",cat:"Cuerpo"},
+  {id:uid(),de:"Rücken (der)",es:"espalda",cat:"Cuerpo"},
+  {id:uid(),de:"Hals",es:"la garganta",cat:"Cuerpo"},
+  {id:uid(),de:"Fieber (das)",es:"la fiebre",cat:"Cuerpo"},
+  {id:uid(),de:"Mir ist übel",es:"tengo náuseas",cat:"Cuerpo"},
+  {id:uid(),de:"Erkältet sein",es:"estar resfriado",cat:"Cuerpo"},
+  {id:uid(),de:"Anprobieren",es:"probarse",cat:"Ropa"},
+  {id:uid(),de:"Tragen",es:"llevar (ropa)",cat:"Ropa"},
+  {id:uid(),de:"Umtauschen",es:"cambiar (prenda)",cat:"Ropa"},
+  {id:uid(),de:"Größe (die)",es:"la talla",cat:"Ropa"},
+  {id:uid(),de:"Hemd (das)",es:"camisa",cat:"Ropa"},
+  {id:uid(),de:"Hose (die)",es:"pantalón",cat:"Ropa"},
+  {id:uid(),de:"Kleid (das)",es:"vestido",cat:"Ropa"},
+  {id:uid(),de:"Gabel (die)",es:"tenedor",cat:"Mesa"},
+  {id:uid(),de:"Messer (das)",es:"cuchillo",cat:"Mesa"},
+  {id:uid(),de:"Löffel (der)",es:"cuchara",cat:"Mesa"},
+  {id:uid(),de:"Teller (der)",es:"plato",cat:"Mesa"},
+  {id:uid(),de:"Tasse (die)",es:"la taza",cat:"Mesa"},
+  {id:uid(),de:"Kühlschrank (der)",es:"frigorífico",cat:"Mesa"},
+  {id:uid(),de:"Herd (der)",es:"fogones",cat:"Mesa"},
+  {id:uid(),de:"Frühstück",es:"desayuno",cat:"Mesa"},
+  {id:uid(),de:"Mittagessen",es:"comida del mediodía",cat:"Mesa"},
+  {id:uid(),de:"Abendessen",es:"cena",cat:"Mesa"},
+  {id:uid(),de:"Strand (der)",es:"la playa",cat:"Viajes"},
+  {id:uid(),de:"Flughafen (der)",es:"aeropuerto",cat:"Viajes"},
+  {id:uid(),de:"Reisepass (der)",es:"pasaporte",cat:"Viajes"},
+  {id:uid(),de:"Unterkunft (die)",es:"el alojamiento",cat:"Viajes"},
+  {id:uid(),de:"Verspätung",es:"retraso",cat:"Viajes"},
+  {id:uid(),de:"Buchen",es:"reservar",cat:"Viajes"},
+  {id:uid(),de:"Gleis (das)",es:"andén",cat:"Viajes"},
+  {id:uid(),de:"Etwas trinken gehen",es:"ir a tomar algo",cat:"Frases"},
+  {id:uid(),de:"Gute Besserung!",es:"¡que te mejores!",cat:"Frases"},
+  {id:uid(),de:"Ich habe keine Ahnung",es:"no tengo ni idea",cat:"Frases"},
+  {id:uid(),de:"Mit freundlichen Grüßen",es:"atentamente",cat:"Frases"},
+  {id:uid(),de:"Was empfehlen Sie?",es:"¿qué recomienda?",cat:"Frases"},
+  {id:uid(),de:"Wie fühlst du dich?",es:"¿cómo te sientes?",cat:"Frases"},
+  {id:uid(),de:"Ich würde",es:"me gustaría...",cat:"Frases"},
+  {id:uid(),de:"Cousin / Cousine",es:"primo / prima",cat:"Familia"},
+  {id:uid(),de:"Schwiegereltern",es:"suegros",cat:"Familia"},
+  {id:uid(),de:"Verheiratet",es:"casado/a",cat:"Familia"},
+  {id:uid(),de:"Verlobt",es:"prometido/a",cat:"Familia"},
+];
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function loadCards() {
+  try { const d = localStorage.getItem(STORAGE_KEY); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+}
+function saveCards() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cards)); } catch(e) {}
+}
+function loadCats() {
+  try { const d = localStorage.getItem(CATS_KEY); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+}
+function saveCats() {
+  try { localStorage.setItem(CATS_KEY, JSON.stringify(categories)); } catch(e) {}
+}
+
+let cards = loadCards() || DEFAULT_CARDS.map(c => ({...c}));
+let categories = loadCats() || [...DEFAULT_CATS];
+if (!cards.length) { cards = DEFAULT_CARDS.map(c=>({...c})); saveCards(); }
+
+// =========== STUDY STATE ===========
+let deck = [];
+let idx = 0;
+let correct = 0;
+let wrong = [];
+let total = 0;
+let flipped = false;
+let showDE = true;
+let studyCat = "Todos";
+
+function buildStudyDeck() {
+  let pool = studyCat === "Todos" ? [...cards] : cards.filter(c => c.cat === studyCat);
+  shuffle(pool);
+  deck = pool;
+  idx = 0; correct = 0; wrong = []; total = deck.length; flipped = false;
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('doneBox').classList.remove('show');
+  document.getElementById('studyCardWrap').style.display = '';
+  if (!deck.length) {
+    document.getElementById('studyEmpty').style.display = '';
+    document.getElementById('studyCardWrap').style.display = 'none';
+  } else {
+    document.getElementById('studyEmpty').style.display = 'none';
+  }
+  showStudyCard();
+  updateStudyStats();
+}
+
+function showStudyCard() {
+  if (idx >= deck.length) { showDone(); return; }
+  const c = deck[idx];
+  flipped = false;
+  document.getElementById('cardInner').classList.remove('flipped');
+  const front = showDE ? c.de : c.es;
+  const back  = showDE ? c.es : c.de;
+  document.getElementById('cfCat').textContent = c.cat;
+  document.getElementById('cfWord').textContent = front;
+  document.getElementById('cfSub').textContent = showDE ? 'Deutsch → toca para traducción' : 'Español → toca para traducción';
+  document.getElementById('cbCat').textContent = showDE ? 'Español' : 'Deutsch';
+  document.getElementById('cbWord').textContent = back;
+  document.getElementById('cbSub').textContent = c.cat;
+  // animate
+  const cw = document.querySelector('.card-wrap');
+  cw.style.animation='none'; cw.offsetHeight; cw.style.animation='slideDown 0.25s ease';
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('cardInner').classList.toggle('flipped', flipped);
+}
+
+function markCard(ok) {
+  if (ok) correct++; else wrong.push(deck[idx]);
+  idx++;
+  flipped = false;
+  showStudyCard();
+  updateStudyStats();
+}
+
+function skipCard() {
+  deck.push(deck.splice(idx, 1)[0]);
+  flipped = false;
+  showStudyCard();
+}
+
+function updateStudyStats() {
+  const rem = deck.length - idx;
+  document.getElementById('sCorrect').textContent = correct;
+  document.getElementById('sRemain').textContent = rem;
+  document.getElementById('sProgress').textContent = (total - rem) + ' / ' + total;
+  const pct = total > 0 ? ((total - rem) / total * 100) : 0;
+  document.getElementById('sFill').style.width = pct + '%';
+}
+
+function showDone() {
+  document.getElementById('studyCardWrap').style.display = 'none';
+  document.getElementById('doneBox').classList.add('show');
+  document.getElementById('doneStats').innerHTML =
+    `Completadas: ${total} · ✓ ${correct} correctas · ✕ ${wrong.length} falladas`;
+}
+
+function restartDeck() { buildStudyDeck(); }
+function restartWrong() {
+  if (!wrong.length) { buildStudyDeck(); return; }
+  deck = [...wrong]; shuffle(deck);
+  idx=0; correct=0; wrong=[]; total=deck.length; flipped=false;
+  document.getElementById('doneBox').classList.remove('show');
+  document.getElementById('studyCardWrap').style.display='';
+  showStudyCard(); updateStudyStats();
+}
+function shuffleDeck() {
+  const rem = deck.slice(idx); shuffle(rem);
+  deck = deck.slice(0,idx).concat(rem);
+  showStudyCard();
+}
+function toggleDir() {
+  showDE = !showDE;
+  document.getElementById('dirBtn').textContent = showDE ? 'DE → ES' : 'ES → DE';
+  showStudyCard();
+}
+
+function shuffle(a) {
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+}
+
+// =========== STUDY CATEGORY PILLS ===========
+function renderStudyCats() {
+  const div = document.getElementById('studyCats');
+  div.innerHTML = '';
+  const cats = ["Todos", ...categories.filter(c => cards.some(x=>x.cat===c))];
+  cats.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-pill' + (c===studyCat?' active':'');
+    b.textContent = c + (c!=="Todos" ? ` (${cards.filter(x=>x.cat===c).length})` : ` (${cards.length})`);
+    b.onclick = () => { studyCat=c; renderStudyCats(); buildStudyDeck(); };
+    div.appendChild(b);
+  });
+}
+
+// =========== MANAGE ===========
+let editingId = null;
+
+function toggleAddForm() {
+  const f = document.getElementById('addForm');
+  f.classList.toggle('show');
+  if (f.classList.contains('show')) {
+    renderCatSelect('fCat');
+    document.getElementById('fDE').focus();
+  }
+}
+
+function cancelForm() {
+  document.getElementById('addForm').classList.remove('show');
+  document.getElementById('fDE').value='';
+  document.getElementById('fES').value='';
+  document.getElementById('fNewCat').value='';
+}
+
+function addCategory() {
+  const v = document.getElementById('fNewCat').value.trim();
+  if (!v) return;
+  if (!categories.includes(v)) { categories.push(v); saveCats(); }
+  document.getElementById('fNewCat').value='';
+  renderCatSelect('fCat');
+  document.getElementById('fCat').value = v;
+}
+
+function renderCatSelect(id) {
+  const s = document.getElementById(id);
+  s.innerHTML = '';
+  categories.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    s.appendChild(o);
+  });
+}
+
+function saveCard() {
+  const de = document.getElementById('fDE').value.trim();
+  const es = document.getElementById('fES').value.trim();
+  const cat = document.getElementById('fCat').value;
+  if (!de || !es) { alert('Rellena alemán y español'); return; }
+  cards.push({id:uid(), de, es, cat});
+  saveCards();
+  cancelForm();
+  renderManage();
+  renderStudyCats();
+}
+
+function renderManage() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = q ? cards.filter(c => c.de.toLowerCase().includes(q) || c.es.toLowerCase().includes(q) || c.cat.toLowerCase().includes(q)) : cards;
+
+  // group by category
+  const byCat = {};
+  filtered.forEach(c => {
+    if (!byCat[c.cat]) byCat[c.cat] = [];
+    byCat[c.cat].push(c);
+  });
+
+  const list = document.getElementById('manageList');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">No se encontraron tarjetas.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  const orderedCats = categories.filter(c => byCat[c]);
+  // also any cats not in categories list
+  Object.keys(byCat).forEach(c => { if (!orderedCats.includes(c)) orderedCats.push(c); });
+
+  orderedCats.forEach(cat => {
+    const items = byCat[cat];
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.innerHTML = `<div class="cat-section-header">
+      <div class="cat-section-title">${cat}</div>
+      <div class="cat-count">${items.length} tarjeta${items.length!==1?'s':''}</div>
+    </div>`;
+    items.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'card-row';
+      row.innerHTML = `
+        <div class="card-row-de">${c.de}</div>
+        <div class="card-row-arrow">→</div>
+        <div class="card-row-es">${c.es}</div>
+        <div class="card-row-actions">
+          <button class="icon-btn" title="Editar" onclick="openEdit('${c.id}')">✏️</button>
+          <button class="icon-btn del" title="Eliminar" onclick="deleteCard('${c.id}')">🗑</button>
+        </div>`;
+      sec.appendChild(row);
+    });
+    list.appendChild(sec);
+  });
+}
+
+function deleteCard(id) {
+  if (!confirm('¿Eliminar esta tarjeta?')) return;
+  cards = cards.filter(c => c.id !== id);
+  saveCards();
+  renderManage();
+  renderStudyCats();
+}
+
+function openEdit(id) {
+  editingId = id;
+  const c = cards.find(x=>x.id===id);
+  if (!c) return;
+  document.getElementById('eDE').value = c.de;
+  document.getElementById('eES').value = c.es;
+  renderCatSelect('eCat');
+  document.getElementById('eCat').value = c.cat;
+  document.getElementById('editModal').classList.add('show');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('show');
+  editingId = null;
+}
+
+function saveEdit() {
+  const c = cards.find(x=>x.id===editingId);
+  if (!c) return;
+  c.de = document.getElementById('eDE').value.trim();
+  c.es = document.getElementById('eES').value.trim();
+  c.cat = document.getElementById('eCat').value;
+  if (!c.de || !c.es) { alert('Rellena los dos campos'); return; }
+  saveCards();
+  closeEditModal();
+  renderManage();
+  renderStudyCats();
+}
+
+// click outside modal
+document.getElementById('editModal').addEventListener('click', function(e){
+  if (e.target === this) closeEditModal();
+});
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if (document.getElementById('view-study').classList.contains('active')) {
+    if (e.key===' '||e.key==='Enter') { e.preventDefault(); flipCard(); }
+    if (e.key==='ArrowRight') markCard(true);
+    if (e.key==='ArrowLeft') markCard(false);
+    if (e.key==='ArrowDown') skipCard();
+  }
+});
+
+// =========== VIEWS ===========
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  event.target.classList.add('active');
+  if (v==='manage') { renderCatSelect('fCat'); renderManage(); }
+  if (v==='study') { renderStudyCats(); }
+  if (v==='grammar') { renderGrammarTopics(); }
+}
+
+// =========== GRAMMAR ===========
+const GRAMMAR_KEY = 'mein_deutsch_grammar_v1';
+
+const BUILTIN_GRAMMAR = [
+  {
+    id:'g-akk', title:'Akkusativ vs. Dativ', tagline:'¿Wohin? vs. ¿Wo?',
+    body:`Akkusativ → movimiento HACIA un lugar (responde a wohin?)
+Ich gehe in die Küche. → Voy a la cocina.
+
+Dativ → algo ocurre EN un lugar fijo (responde a wo?)
+Ich esse in der Küche. → Como en la cocina.
+
+Preposiciones que cambian: in, an, auf, hinter, unter, über, vor, neben, zwischen
+
+Artículos según caso:
+         Nominativ  Akkusativ  Dativ
+Masc.    der        den        dem
+Fem.     die        die        der
+Neutro   das        das        dem
+Plural   die        die        den
+
+Truco: solo el masculino cambia en Akkusativ (der → den).`
+  },
+  {
+    id:'g-perfekt', title:'El Perfekt (pasado)', tagline:'haben o sein + participio',
+    body:`El Perfekt es el pasado más usado en alemán hablado.
+Estructura: haben/sein (conjugado) + ... + participio al final.
+
+CON HABEN (mayoría de verbos):
+Ich habe Sport gemacht. → Hice deporte.
+
+CON SEIN (movimiento y cambio de estado):
+Ich bin nach Berlin gefahren. → Fui a Berlín.
+
+Verbos con sein: laufen, kommen, fahren, gehen, fliegen, ankommen, einschlafen, aufstehen...
+
+Participios regulares: ge- + raíz + -t → machen → gemacht
+Participios irregulares: ge- + raíz cambiada + -en → fahren → gefahren
+
+Verbos separables: prefijo + ge + raíz → aufstehen → aufgestanden
+Verbos inseparables (be-, ver-, er-...): sin ge- → bezahlen → bezahlt`
+  },
+  {
+    id:'g-sep', title:'Verbos separables', tagline:'Trennbare Verben',
+    body:`El prefijo se separa y va AL FINAL de la frase en presente.
+
+En presente:
+Ich stehe um 7 Uhr auf. → Me levanto a las 7. (aufstehen)
+
+Con modal (infinitivo junto al final):
+Ich muss um 7 Uhr aufstehen.
+
+Ejemplos:
+aufstehen → stehe … auf (levantarse)
+aufwachen → wache … auf (despertarse)
+einschlafen → schlafe … ein (dormirse)
+anrufen → rufe … an (llamar)
+abholen → hole … ab (ir a buscar)
+ausgehen → gehe … aus (salir)
+einkaufen → kaufe … ein (hacer la compra)
+
+Prefijos separables: auf-, ein-, aus-, an-, ab-, mit-, vor-, zu-, weg-, zurück-`
+  },
+  {
+    id:'g-adj', title:'Declinación de adjetivos', tagline:'Adjektivdeklination',
+    body:`Si el adjetivo va DESPUÉS del sustantivo → no varía:
+Das Haus ist groß.
+
+Si va ANTES del sustantivo → cambia según género y caso.
+
+Con artículo determinado (der/die/das):
+Masc. Nom: der neue Computer → Akk: den neuen Computer
+Fem.  Nom: die neue Kollegin → Akk: die neue Kollegin
+Neutro Nom: das neue Büro → Akk: das neue Büro
+
+Con artículo indeterminado (ein/eine/ein):
+Masc. Nom: ein neuer Computer
+Fem.  Nom: eine neue Kollegin
+Neutro Nom: ein neues Büro
+
+Dativo: dem/einem + adj-EN (masc/neutro) · der/einer + adj-EN (fem)
+
+Regla rápida: con artículo determinado casi siempre termina en -e o -en.`
+  },
+  {
+    id:'g-kontr', title:'Contracciones', tagline:'Preposición + artículo',
+    body:`Preposición + artículo masculino/neutro en Dativ o Akkusativ → se unen:
+
+in + dem = im → im Supermarkt
+in + das = ins → ins Kino gehen
+an + dem = am → am Montag
+an + das = ans → ans Meer fahren
+auf + das = aufs → aufs Land fahren
+zu + dem = zum → zum Arzt gehen
+zu + der = zur → zur Schule gehen
+
+Las contracciones son obligatorias en el registro normal.
+Las formas sin contraer (in dem, an dem) suenan muy formales.`
+  },
+  {
+    id:'g-dativ', title:'Verbos con Dativo', tagline:'Verbos que siempre rigen Dativ',
+    body:`Estos verbos siempre llevan el complemento en DATIV, no en Akkusativ:
+
+helfen → ayudar → Ich helfe dir.
+gehören → pertenecer → Das gehört mir.
+gefallen → gustar → Das gefällt mir.
+passen → quedar bien → Die Hose passt mir.
+stehen → sentar bien → Das steht dir gut.
+schmecken → saber bien → Das schmeckt mir.
+antworten → responder → Ich antworte dir.
+wehtun → doler → Der Kopf tut mir weh.
+
+Pronombres en Dativ:
+mir (me), dir (te), ihm/ihr/ihm (le), uns (nos), euch (os), ihnen/Ihnen (les)`
+  },
+  {
+    id:'g-zeit', title:'Expresiones temporales', tagline:'letzt- y dies-',
+    body:`"Este/a" y "pasado/a" actúan como artículos acusativos. La terminación depende del género:
+
+Masc. (der Monat): diesen Monat / letzten Monat
+Fem.  (die Woche): diese Woche / letzte Woche
+Neutro (das Jahr): dieses Jahr / letztes Jahr
+
+Estructura con adverbio temporal (tiempo en primera posición):
+Gestern habe ich Sport gemacht. → Ayer hice deporte.
+Letzte Woche bin ich nach München gefahren.
+
+REGLA DE ORO: el verbo siempre ocupa la 2ª posición.
+Si algo va antes del sujeto, el sujeto pasa a la 3ª posición.`
+  },
+  {
+    id:'g-konj', title:'Konjunktiv II', tagline:'würde, wäre, hätte — condicional',
+    body:`El Konjunktiv II es el condicional. Se usa para deseos, hipótesis e imaginaciones.
+
+würde + infinitivo (= haría / me gustaría):
+Ich würde gern nach Berlin fahren. → Me gustaría ir a Berlín.
+
+wäre (sein en KII = sería / estaría):
+Wenn ich reich wäre… → Si fuera rico/a…
+
+hätte (haben en KII = tendría):
+Wenn ich Zeit hätte… → Si tuviera tiempo…
+
+Conjugación:
+         würde      wäre     hätte
+ich      würde      wäre     hätte
+du       würdest    wärst    hättest
+er/sie   würde      wäre     hätte
+wir      würden     wären    hätten`
+  },
+];
+
+function loadGrammar() {
+  try { const d = localStorage.getItem(GRAMMAR_KEY); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+}
+function saveGrammar() {
+  try { localStorage.setItem(GRAMMAR_KEY, JSON.stringify(grammarTopics)); } catch(e) {}
+}
+
+let grammarTopics = loadGrammar() || BUILTIN_GRAMMAR.map(g => ({...g}));
+let activeGrammarId = grammarTopics.length ? grammarTopics[0].id : null;
+let editingGrammarId = null;
+
+function renderGrammarTopics() {
+  // Pills
+  const div = document.getElementById('grammarTopics');
+  div.innerHTML = '';
+  grammarTopics.forEach(g => {
+    const b = document.createElement('button');
+    b.className = 'topic-pill' + (g.id === activeGrammarId ? ' active' : '');
+    b.textContent = g.title;
+    b.onclick = () => { activeGrammarId = g.id; renderGrammarTopics(); };
+    div.appendChild(b);
+  });
+
+  // Content
+  const content = document.getElementById('grammarContent');
+  if (!grammarTopics.length) {
+    content.innerHTML = '<div class="empty-state">Aún no tienes temas de gramática.<br>Pulsa "+ Añadir tema" para crear el primero.</div>';
+    return;
+  }
+
+  const topic = grammarTopics.find(g => g.id === activeGrammarId) || grammarTopics[0];
+  if (!activeGrammarId) activeGrammarId = topic.id;
+
+  const lines = (topic.body || '').split('\n').map(l => {
+    if (!l.trim()) return '<br>';
+    return `<p style="margin-bottom:4px">${l.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</p>`;
+  }).join('');
+
+  content.innerHTML = `
+    <div class="grammar-card active">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <h2>${topic.title}</h2>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="icon-btn" onclick="editGrammar('${topic.id}')" title="Editar">✏️</button>
+          <button class="icon-btn del" onclick="deleteGrammar('${topic.id}')" title="Eliminar">🗑</button>
+        </div>
+      </div>
+      ${topic.tagline ? `<span class="tagline">${topic.tagline}</span>` : ''}
+      <div style="font-size:0.88rem;line-height:1.8;color:var(--text);margin-top:10px">${lines}</div>
+    </div>`;
+}
+
+function toggleGrammarForm() {
+  const f = document.getElementById('grammarForm');
+  const isOpen = f.classList.contains('show');
+  if (isOpen) {
+    cancelGrammarForm();
+  } else {
+    editingGrammarId = null;
+    document.getElementById('gTitle').value = '';
+    document.getElementById('gTagline').value = '';
+    document.getElementById('gBody').value = '';
+    f.classList.add('show');
+    document.getElementById('gTitle').focus();
+  }
+}
+
+function cancelGrammarForm() {
+  document.getElementById('grammarForm').classList.remove('show');
+  editingGrammarId = null;
+}
+
+function saveGrammarTopic() {
+  const title = document.getElementById('gTitle').value.trim();
+  const tagline = document.getElementById('gTagline').value.trim();
+  const body = document.getElementById('gBody').value.trim();
+  if (!title) { alert('El título no puede estar vacío'); return; }
+
+  if (editingGrammarId) {
+    const t = grammarTopics.find(g => g.id === editingGrammarId);
+    if (t) { t.title = title; t.tagline = tagline; t.body = body; }
+  } else {
+    const newTopic = { id: 'g-' + uid(), title, tagline, body };
+    grammarTopics.push(newTopic);
+    activeGrammarId = newTopic.id;
+  }
+  saveGrammar();
+  cancelGrammarForm();
+  renderGrammarTopics();
+}
+
+function editGrammar(id) {
+  const t = grammarTopics.find(g => g.id === id);
+  if (!t) return;
+  editingGrammarId = id;
+  document.getElementById('gTitle').value = t.title;
+  document.getElementById('gTagline').value = t.tagline || '';
+  document.getElementById('gBody').value = t.body || '';
+  document.getElementById('grammarForm').classList.add('show');
+  document.getElementById('gTitle').focus();
+  document.getElementById('grammarForm').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteGrammar(id) {
+  if (!confirm('¿Eliminar este tema?')) return;
+  grammarTopics = grammarTopics.filter(g => g.id !== id);
+  activeGrammarId = grammarTopics.length ? grammarTopics[0].id : null;
+  saveGrammar();
+  renderGrammarTopics();
+}
+
+// =========== INIT ===========
+renderStudyCats();
+buildStudyDeck();
+renderGrammarTopics();
+</script>
+</body>
+</html>
